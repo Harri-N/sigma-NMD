@@ -1,0 +1,95 @@
+Matrix Size, Rank, Method, Zero Error Count
+5, 3, TSVD, 0
+5, 3, sigma-NMD (TSVD init), 100
+5, 3, ReLU-NMD (TSVD init), 0
+5, 3, sigma-NMD (Random init), 94
+5, 3, ReLU-NMD (Random init), 100
+5, 3, NMF, 0
+5, 4, TSVD, 0
+5, 4, sigma-NMD (TSVD init), 100
+5, 4, ReLU-NMD (TSVD init), 0
+5, 4, sigma-NMD (Random init), 100
+5, 4, ReLU-NMD (Random init), 100
+5, 4, NMF, 0
+5, 5, TSVD, 1
+5, 5, sigma-NMD (TSVD init), 100
+5, 5, ReLU-NMD (TSVD init), 100
+5, 5, sigma-NMD (Random init), 100
+5, 5, ReLU-NMD (Random init), 100
+5, 5, NMF, 81
+Matrix Size, Rank, Method, Zero Error Count
+10, 3, TSVD, 0
+10, 3, sigma-NMD (TSVD init), 0
+10, 3, ReLU-NMD (TSVD init), 0
+10, 3, sigma-NMD (Random init), 62
+10, 3, ReLU-NMD (Random init), 89
+10, 3, NMF, 0
+10, 4, TSVD, 0
+10, 4, sigma-NMD (TSVD init), 100
+10, 4, ReLU-NMD (TSVD init), 0
+10, 4, sigma-NMD (Random init), 99
+10, 4, ReLU-NMD (Random init), 100
+10, 4, NMF, 0
+10, 5, TSVD, 0
+10, 5, sigma-NMD (TSVD init), 100
+10, 5, ReLU-NMD (TSVD init), 0
+10, 5, sigma-NMD (Random init), 100
+10, 5, ReLU-NMD (Random init), 100
+10, 5, NMF, 0
+Matrix Size, Rank, Method, Zero Error Count
+15, 3, TSVD, 0
+15, 3, sigma-NMD (TSVD init), 100
+15, 3, ReLU-NMD (TSVD init), 0
+15, 3, sigma-NMD (Random init), 82
+15, 3, ReLU-NMD (Random init), 63
+15, 3, NMF, 0
+15, 4, TSVD, 0
+15, 4, sigma-NMD (TSVD init), 100
+15, 4, ReLU-NMD (TSVD init), 0
+15, 4, sigma-NMD (Random init), 93
+15, 4, ReLU-NMD (Random init), 100
+15, 4, NMF, 0
+15, 5, TSVD, 0
+15, 5, sigma-NMD (TSVD init), 100
+15, 5, ReLU-NMD (TSVD init), 0
+15, 5, sigma-NMD (Random init), 100
+15, 5, ReLU-NMD (Random init), 100
+15, 5, NMF, 0
+Matrix Size, Rank, Method, Zero Error Count
+20, 3, TSVD, 0
+20, 3, sigma-NMD (TSVD init), 100
+20, 3, ReLU-NMD (TSVD init), 0
+20, 3, sigma-NMD (Random init), 69
+20, 3, ReLU-NMD (Random init), 38
+20, 3, NMF, 0
+20, 4, TSVD, 0
+20, 4, sigma-NMD (TSVD init), 100
+20, 4, ReLU-NMD (TSVD init), 0
+20, 4, sigma-NMD (Random init), 89
+20, 4, ReLU-NMD (Random init), 100
+20, 4, NMF, 0
+20, 5, TSVD, 0
+20, 5, sigma-NMD (TSVD init), 100
+20, 5, ReLU-NMD (TSVD init), 0
+20, 5, sigma-NMD (Random init), 95
+20, 5, ReLU-NMD (Random init), 99
+20, 5, NMF, 0
+Matrix Size, Rank, Method, Zero Error Count
+25, 3, TSVD, 0
+25, 3, sigma-NMD (TSVD init), 0
+25, 3, ReLU-NMD (TSVD init), 0
+25, 3, sigma-NMD (Random init), 18
+25, 3, ReLU-NMD (Random init), 20
+25, 3, NMF, 0
+25, 4, TSVD, 0
+25, 4, sigma-NMD (TSVD init), 100
+25, 4, ReLU-NMD (TSVD init), 0
+25, 4, sigma-NMD (Random init), 85
+25, 4, ReLU-NMD (Random init), 100
+25, 4, NMF, 0
+25, 5, TSVD, 0
+25, 5, sigma-NMD (TSVD init), 100
+25, 5, ReLU-NMD (TSVD init), 0
+25, 5, sigma-NMD (Random init), 95
+25, 5, ReLU-NMD (Random init), 100
+25, 5, NMF, 0
