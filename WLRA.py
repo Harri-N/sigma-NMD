@@ -12,7 +12,7 @@ def WLRA(X, P=None, r=1, W0=None, H0=None, nonneg=False, lambda_=1e-6, tol=1e-4,
     using a block coordinate descent method (columns of W and H are the
     blocks, like in HALS for NMF).
     It is possible to requires (W,H) >= 0 using nonneg = 1.
-    This codes is an adaptation of this repo :
+    This codes is an adaptation of a Matlab file available here : https://gitlab.com/ngillis/nmfbook.git
 
     Args:
         X (numpy.ndarray): Input matrix of shape (m, n).
