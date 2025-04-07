@@ -2,9 +2,8 @@
 
 This codes provides algorithm to solve the following Nonlinear Matrix Decomposition (NMD) problems with the sigmoid function:  
 Given a matrix $X \in \mathbb{R}^{m \times n}$ and an integer $r$, solve  
-$$
-    \min_{W, H} \| X - \sigma(WH) \|_F^2, 
-$$
+
+$$ \min_{W, H} \| X - \sigma(WH) \|_F^2, $$
 
 where $W$ has $r$ columns, and $H$ has $r$ rows. The sigmoid function $\sigma(\cdot)$ is applied component-wise on $WH$ and is defined by :
         
