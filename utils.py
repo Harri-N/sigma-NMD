@@ -98,7 +98,7 @@ def compute_step_length(fct,A,b,x,d,alpha,beta1=0.0001,beta2=0.9):
       float: Step size satisfying Wolfe conditions.
   """
   aleft = 0
-  aright = np.Inf
+  aright = np.inf
 
   while True:
 
@@ -110,7 +110,7 @@ def compute_step_length(fct,A,b,x,d,alpha,beta1=0.0001,beta2=0.9):
       alpha = (aleft+aright)/2
     elif not w2(fct,A,b,x,d,alpha,beta2):
       aleft = alpha 
-      if aright<np.Inf:
+      if aright<np.inf:
         alpha = (aleft+aright)/2
       else : 
         alpha = 2*alpha 

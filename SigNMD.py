@@ -27,7 +27,7 @@ def sigma_NMD(X,r=1,W0=None,H0=None,X_filled=None,init="random",maxiter=1e4,tol=
     Returns:
         W_opt (numpy.ndarray): Optimal matrix W of shape (m, r).
         H_opt (numpy.ndarray): Optimal matrix H of shape (r, n).
-        relative_errors (list): List of relative errors at each iteration.
+        relative_errors (list): List of relative errors at each iteration. ||X-sigma(WH)||_F / || X ||_F
         error_rates (list): List of error rates at each iteration.
         rmse (list): List of RMSE values at each iteration.
 
@@ -36,7 +36,7 @@ def sigma_NMD(X,r=1,W0=None,H0=None,X_filled=None,init="random",maxiter=1e4,tol=
 
     # Binary mask
     M = np.isnan(X).astype(float)  # 1 for missing, 0 for observed
-    Obs = 1-M # 1 for observed, 0 for missing
+    P = 1-M # 1 for observed, 0 for missing
     X = np.nan_to_num(X)  # Replace NaN with 0 for computation
 
     # Initialize W and H matrices
@@ -58,9 +58,9 @@ def sigma_NMD(X,r=1,W0=None,H0=None,X_filled=None,init="random",maxiter=1e4,tol=
             # else, use the Weighted Low-Rank Approximation
             else:
                 if W0 is None or H0 is None:
-                    W_svd, H_svd, e1,e2,e3 = WLRA(2*X-1, Obs, r, X_filled=X_filled, nonneg=False)
+                    W_svd, H_svd, e1,e2,e3 = WLRA(2*X-1, P, r, X_filled=X_filled, nonneg=False)
                 else:
-                    W_svd, H_svd, e1,e2,e3 = WLRA(2*X-1, Obs, r, W0, H0.T, X_filled=X_filled, nonneg=False)
+                    W_svd, H_svd, e1,e2,e3 = WLRA(2*X-1, P, r, W0, H0.T, X_filled=X_filled, nonneg=False)
                 W = W_svd if W0 is None else W0.copy()
                 H = H_svd if H0 is None else H0.copy()
                 H = H.T
@@ -80,8 +80,8 @@ def sigma_NMD(X,r=1,W0=None,H0=None,X_filled=None,init="random",maxiter=1e4,tol=
         err_rate0 = np.sum(M)  
         rmse0 = np.sum(M)
     else:
-        err_rate0 = np.sum(Obs)
-        rmse0 = np.sum(Obs)
+        err_rate0 = np.sum(P)
+        rmse0 = np.sum(P)
         
     
     relative_errors, error_rates, rmse = [], [], []
@@ -90,24 +90,24 @@ def sigma_NMD(X,r=1,W0=None,H0=None,X_filled=None,init="random",maxiter=1e4,tol=
     iteration = 0
     
     # Compute initial error
-    relative_errors.append(np.sqrt(np.sum(((X - (sigmoid(W @ H))) * Obs)**2) / rel_err0))
+    relative_errors.append(np.sqrt(np.sum(((X - (sigmoid(W @ H))) * P)**2) / rel_err0))
     if X_filled is not None and np.sum(M) > 0:
         error_rates.append(np.sum(((X_filled - np.round(sigmoid(W @ H)))*M)**2) / err_rate0)
         rmse.append(np.sqrt(np.sum(((X_filled - (sigmoid(W @ H))) * M)**2) / rmse0))
     else:
-        error_rates.append(np.sum(((X - np.round(sigmoid(W @ H)))*Obs)**2) / err_rate0)
-        rmse.append(np.sqrt(np.sum(((X - (sigmoid(W @ H))) * Obs)**2) / rmse0))
+        error_rates.append(np.sum(((X - np.round(sigmoid(W @ H)))*P)**2) / err_rate0)
+        rmse.append(np.sqrt(np.sum(((X - (sigmoid(W @ H))) * P)**2) / rmse0))
     
     # Main loop
     while True:
         
         # Update H and W alternately
-        H, learning_rates_H = updateH(X, W, H, learning_rates_H, Obs, scaling)
-        WT, learning_rates_W = updateH(X.T, H.T, W.T, learning_rates_W, Obs.T, scaling)
+        H, learning_rates_H = updateH(X, W, H, learning_rates_H, P, scaling)
+        WT, learning_rates_W = updateH(X.T, H.T, W.T, learning_rates_W, P.T, scaling)
         W = WT.T
 
         # Compute relative error
-        rel_err = np.sqrt(np.sum(((X - (sigmoid(W @ H))) * Obs)**2) / rel_err0)
+        rel_err = np.sqrt(np.sum(((X - (sigmoid(W @ H))) * P)**2) / rel_err0)
 
         # Update optimal matrices if relative error improves
         if rel_err < min(relative_errors):  
@@ -119,8 +119,8 @@ def sigma_NMD(X,r=1,W0=None,H0=None,X_filled=None,init="random",maxiter=1e4,tol=
             error_rates.append(np.sum(((X_filled - np.round(sigmoid(W @ H)))*M)**2) / err_rate0)
             rmse.append(np.sqrt(np.sum(((X_filled - (sigmoid(W @ H))) * M)**2) / rmse0))
         else:
-            error_rates.append(np.sum(((X - np.round(sigmoid(W @ H)))*Obs)**2) / err_rate0)
-            rmse.append(np.sqrt(np.sum(((X - (sigmoid(W @ H))) * Obs)**2) / rmse0))
+            error_rates.append(np.sum(((X - np.round(sigmoid(W @ H)))*P)**2) / err_rate0)
+            rmse.append(np.sqrt(np.sum(((X - (sigmoid(W @ H))) * P)**2) / rmse0))
         
         # Check for convergence
         if rel_err <= tol:
@@ -141,7 +141,7 @@ def sigma_NMD(X,r=1,W0=None,H0=None,X_filled=None,init="random",maxiter=1e4,tol=
     return W_opt, H_opt, relative_errors, error_rates, rmse
 
 
-def sigmoid_least_squares(A, b, x, alpha, Obs):
+def sigmoid_least_squares(A, b, x, alpha, P):
     """
     This function performs a least squares optimization with sigmoid function.
     Given a matrix `A` of shape (m, r), a vector `b` of shape (m,), a vector `x` of shape (r,),
@@ -153,7 +153,7 @@ def sigmoid_least_squares(A, b, x, alpha, Obs):
         b (numpy.ndarray): Target vector of shape (m,).
         x (numpy.ndarray): Initial vector of shape (r,).
         alpha (float): Initial step size.
-        Obs (numpy.ndarray): Binary mask (1 for observed, 0 for missing), shape (m,).
+        P (numpy.ndarray): Binary mask (1 for observed, 0 for missing), shape (m,).
 
     Returns:
         x (numpy.ndarray): Optimized vector of shape (r,).
@@ -161,7 +161,7 @@ def sigmoid_least_squares(A, b, x, alpha, Obs):
 
     """
     m, r = A.shape
-    Obs_b = Obs > 0  # Filter elements based on Obs
+    Obs_b = P > 0  # Filter elements based on P
     A = A[Obs_b, :]
     b = b[Obs_b]
     f, g = fct_opti(A, b, x)  # Compute function value and gradient
@@ -172,7 +172,7 @@ def sigmoid_least_squares(A, b, x, alpha, Obs):
     return x, alpha
 
 
-def updateH(X,W,H,learning_rates, Obs,scaling):
+def updateH(X,W,H,learning_rates, P,scaling):
     """
     This function updates the matrix H using a block coordinate descent method.
     Given an input matrix `X` of shape (m, n), a matrix `W` of shape (m, r),
@@ -183,7 +183,7 @@ def updateH(X,W,H,learning_rates, Obs,scaling):
         W (numpy.ndarray): Matrix W of shape (m, r).
         H (numpy.ndarray): Matrix H of shape (r, n).
         learning_rates (numpy.ndarray): Learning rates for each column of H.
-        Obs (numpy.ndarray): Binary mask (1 for observed, 0 for missing), shape (m, n).
+        P (numpy.ndarray): Binary mask (1 for observed, 0 for missing), shape (m, n).
         scaling (bool): Apply pre/post-scaling for stability.
     
     Returns:
@@ -206,7 +206,7 @@ def updateH(X,W,H,learning_rates, Obs,scaling):
     for j in range(n):        
         
         # Update H using least squares optimization
-        H[:, j], learning_rates[j] = sigmoid_least_squares(A=Wn, b=X[:, j], x=H[:, j], alpha=learning_rates[j], Obs=Obs[:, j])
+        H[:, j], learning_rates[j] = sigmoid_least_squares(A=Wn, b=X[:, j], x=H[:, j], alpha=learning_rates[j], P=P[:, j])
 
         # Post-scaling step to restore original scale
         for i in range(r):

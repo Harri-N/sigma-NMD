@@ -4,8 +4,7 @@ sys.path.insert(0, '..')
 import numpy as np
 import os
 from SigNMD import sigma_NMD
-from ReLU_NMD import ReLU_NMD
-from WLRA import WLRA
+from eBCD_NMD import eBCD_NMD
 from tqdm import tqdm
 
 matrix_sizes = range(5, 30, 5)
@@ -22,7 +21,7 @@ for matrix_size in matrix_sizes:
     
     for r in ranks:
         print(f"Running experiments for rank {r}")
-        method_results = {"TSVD": [], "sigma-NMD (TSVD init)": [], "ReLU-NMD (TSVD init)": [], "sigma-NMD (Random init)": [], "ReLU-NMD (Random init)": [], "NMF": []}
+        method_results = {"TSVD": [], "sigma-NMD (TSVD init)": [], "eBCD-NMD (TSVD init)": [], "sigma-NMD (Random init)": [], "eBCD-NMD (Random init)": []}
         
         # TSVD
         u, s, vh = np.linalg.svd(identity_matrix, full_matrices=False)
@@ -44,13 +43,13 @@ for matrix_size in matrix_sizes:
         else:
             method_results["sigma-NMD (TSVD init)"].append(0)
         
-        # ReLU-NMD (TSVD init)
-        W, H, rel_err_list, err_rate_list, _ = ReLU_NMD(identity_matrix, r=r, init="tsvd")
+        # eBCD-NMD (TSVD init)
+        Theta, rel_err_list, err_rate_list, rmse = eBCD_NMD(identity_matrix, r, init="tsvd")
         index_opt = np.argmin(np.nan_to_num(rel_err_list, nan=1e16))
         if err_rate_list[index_opt] == 0:
-            method_results["ReLU-NMD (TSVD init)"].append(100)
+            method_results["eBCD-NMD (TSVD init)"].append(100)
         else:
-            method_results["ReLU-NMD (TSVD init)"].append(0)
+            method_results["eBCD-NMD (TSVD init)"].append(0)
         
         for k in tqdm(range(num_exp)):
             W0 = np.random.rand(matrix_size, r)
@@ -61,15 +60,10 @@ for matrix_size in matrix_sizes:
             index_opt = np.argmin(np.nan_to_num(rel_err_list, nan=1e16))
             method_results["sigma-NMD (Random init)"].append(err_rate_list[index_opt] == 0)
             
-            # ReLU-NMD (random init)
-            W, H, rel_err_list, err_rate_list, _ = ReLU_NMD(identity_matrix, r=r, W0=W0, H0=H0)
+            # eBCD-NMD (random init)
+            Theta, rel_err_list, err_rate_list, rmse = eBCD_NMD(identity_matrix, r, W0=W0,H0=H0)
             index_opt = np.argmin(np.nan_to_num(rel_err_list, nan=1e16))
-            method_results["ReLU-NMD (Random init)"].append(err_rate_list[index_opt] == 0)
-            
-            # NMF
-            W, H, rel_err_list, err_rate_list, _ = WLRA(identity_matrix, r=r, W0=W0, H0=H0.T, nonneg=True)
-            index_opt = np.argmin(np.nan_to_num(rel_err_list, nan=1e16))
-            method_results["NMF"].append(err_rate_list[index_opt] == 0)
+            method_results["eBCD-NMD (Random init)"].append(err_rate_list[index_opt] == 0)
         
         for method in method_results:
             zero_error_count = sum(method_results[method])
