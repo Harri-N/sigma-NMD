@@ -4,7 +4,7 @@ from WLRA import WLRA
 
 def sigma_NMD(X,r=1,W0=None,H0=None,X_filled=None,init="random",maxiter=1e4,tol=1e-4, alpha=0.9999, scaling=True, verbose=False):
     """
-    This function solves the Non-linear Matrix Decomposition (NMD) problem with sigmoid function.
+    This function solves the Nonlinear Matrix Decomposition (NMD) problem with sigmoid function.
     Given an input matrix `X` of shape (m, n), a rank `r`, and optional initial matrices `W0` and `H0`,
     it iteratively solves the optimization problem:
     `min_{W,H} ||X - sigmoid(W @ H)||^2`,

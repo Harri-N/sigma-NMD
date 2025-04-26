@@ -6,7 +6,7 @@ from WLRA import WLRA
 
 def eBCD_NMD(X, r, W0=None, H0=None, X_filled=None, init="random", maxit=1e4, tol=1e-4, tolerr=1e-4, display=0, param=None):
     """
-    Extrapolated Block Coordinate Descent to solve the Non-linear Matrix Decomposition (NMD) problem with the ReLU function.
+    Extrapolated Block Coordinate Descent to solve the Nonlinear Matrix Decomposition (NMD) problem with the ReLU function.
     The method is described in the paper "An extrapolated and provably convergent algorithm for nonlinear matrix decomposition with the ReLU function", 
     (Code avalaible here : https://github.com/giovanniseraghiti/ReLU-NMD.git).
 
